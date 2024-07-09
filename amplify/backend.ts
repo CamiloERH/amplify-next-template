@@ -8,6 +8,8 @@ const backend = defineBackend({
 });
 
 const { cfnUserPool } = backend.auth.resources.cfnResources;
+
+cfnUserPool.usernameAttributes = []
 // modify cfnUserPool policies directly
 cfnUserPool.policies = {
   passwordPolicy: {
@@ -23,8 +25,8 @@ cfnUserPool.policies = {
 // update the schema property to add custom attributes
 if (Array.isArray(cfnUserPool.schema)) {
   cfnUserPool.schema.push({
-    name: 'policyName',
-    attributeDataType: 'Boolean',
-    developerOnlyAttribute: true,
+    name: 'identificador',
+    attributeDataType: 'String',
+    developerOnlyAttribute: false
   });
 }
