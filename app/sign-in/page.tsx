@@ -13,21 +13,45 @@ import { redirect } from "next/navigation";
 
 import { I18n } from "aws-amplify/utils";
 import { translations } from "@aws-amplify/ui-react";
+import { SignInInput, signIn } from "aws-amplify/auth";
 I18n.putVocabularies(translations);
 I18n.setLanguage("es");
 
-I18n.putVocabularies({
-  es: {
-    "Sign In": "Iniciar sesión",
-    "Sign Up": "Regístrate",
-  },
+I18n.putVocabulariesForLanguage('es', {
+  'Sign In': 'Iniciar sesión', // Tab header
+  'Sign in': 'Ingresar', // Button label
 });
+
+const handleSignIn = (input: SignInInput) => {
+  const { username, password } = input;
+  return signIn({
+    username: username,
+    password: password,
+    options: {
+      authFlowType: "USER_PASSWORD_AUTH"
+    }
+  })
+}
 
 export default function SignInPage() {
   return (
     <div className="h-full w-full flex flex-row ">
       <div className="w-1/2 bg-blue-700"></div>
       <Authenticator
+        services={{
+          handleSignIn
+        }}
+        formFields={{
+          signIn: {
+            username: {
+              placeholder: 'Ingresa tu RUT o Correo',
+              label: 'RUT o Correo'
+            },
+            password: {
+              placeholder: 'Escribe tu contraseña'
+            }
+          }
+        }}
         className="w-1/2"
         components={{
           Header() {
