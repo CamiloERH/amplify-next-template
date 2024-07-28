@@ -14,6 +14,7 @@ import { redirect } from "next/navigation";
 import { I18n } from "aws-amplify/utils";
 import { translations } from "@aws-amplify/ui-react";
 import { SignInInput, signIn } from "aws-amplify/auth";
+import { saveSessionMetadata } from "../actions/utils";
 I18n.putVocabularies(translations);
 I18n.setLanguage("es");
 
@@ -22,18 +23,27 @@ I18n.putVocabulariesForLanguage('es', {
   'Sign in': 'Ingresar', // Button label
 });
 
-const handleSignIn = (input: SignInInput) => {
+const handleSignIn = async (input: SignInInput) => {
   const { username, password } = input;
-  return signIn({
+  const signInOutput = await signIn({
     username: username,
     password: password,
     options: {
       authFlowType: "USER_PASSWORD_AUTH"
     }
-  })
+  });
+
+  if (signInOutput.nextStep.signInStep === "DONE") {
+    await saveSessionMetadata();
+  }
+
+  console.log(signInOutput);
+
+  return signInOutput
+
 }
 
-export default function SignInPage() {
+export default function Login() {
   return (
     <div className="h-full w-full flex flex-row ">
       <div className="w-1/2 bg-blue-700"></div>
@@ -80,3 +90,4 @@ export default function SignInPage() {
     </div>
   );
 }
+

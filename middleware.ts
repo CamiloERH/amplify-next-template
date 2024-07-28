@@ -11,6 +11,7 @@ export async function middleware(request: NextRequest) {
       try {
         const session = await fetchAuthSession(contextSpec);
 
+
         return (
           session.tokens?.accessToken !== undefined &&
           session.tokens?.idToken !== undefined
