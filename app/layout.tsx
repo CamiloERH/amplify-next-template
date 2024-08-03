@@ -29,6 +29,8 @@ export default async function RootLayout({
 
   const poolId = await getPoolId(uri!);
 
+  console.log("poolId clientside", poolId)
+
   return (
     <html lang="en">
       <body className={inter.className}>
