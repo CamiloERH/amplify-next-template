@@ -12,6 +12,8 @@ export const getAmplifyServerContext = async () => {
 
     const poolId = await getPoolId();
 
+    console.log(poolId);
+
     const { runWithAmplifyServerContext } = createServerRunner({
         config: {
             Auth: {
