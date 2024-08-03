@@ -40,6 +40,10 @@ export async function middleware(request: NextRequest) {
     return response;
   }
 
+  if (request.nextUrl.pathname.startsWith('/sign-in')) {
+    return response;
+  }
+
   return NextResponse.redirect(new URL("/sign-in", request.url), {
     headers: requestHeaders
   });
@@ -54,6 +58,6 @@ export const config = {
      * - _next/image (image optimization files)
      * - favicon.ico (favicon file)
      */
-    "/((?!api|_next/static|_next/image|favicon.ico|sign-in).*)",
+    "/((?!api|_next/static|_next/image|favicon.ico).*)",
   ],
 };
