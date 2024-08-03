@@ -1,19 +1,17 @@
 "use server";
 
-import { cookies } from "next/headers";
+import { cookies, headers } from "next/headers";
 import { createServerRunner } from "@aws-amplify/adapter-nextjs";
 import { generateServerClientUsingCookies } from "@aws-amplify/adapter-nextjs/api";
 import { fetchAuthSession, getCurrentUser, fetchUserAttributes } from "aws-amplify/auth/server";
 import { getPoolId } from "./getClientId";
 
-export const getAmplifyServerContext = async () => {
+export const getAmplifyServerContext = async (uri: string) => {
 
     const cookieStore = cookies()
 
-    const poolId = await getPoolId();
-
-    console.log(poolId);
-
+    const poolId = await getPoolId(uri);
+    
     const { runWithAmplifyServerContext } = createServerRunner({
         config: {
             Auth: {
@@ -30,11 +28,13 @@ export const getAmplifyServerContext = async () => {
 
 }
 
-
-
 export async function AuthGetCurrentUserServer() {
+
+    const headersList = headers()
+    const uri = headersList.get('x-pathname');
+
     try {
-        const runWithAmplifyServerContext = await getAmplifyServerContext();
+        const runWithAmplifyServerContext = await getAmplifyServerContext(uri!);
         const currentUser = await runWithAmplifyServerContext({
             nextServerContext: { cookies },
             operation: (contextSpec) => getCurrentUser(contextSpec),
@@ -46,8 +46,12 @@ export async function AuthGetCurrentUserServer() {
 }
 
 export async function AuthfetchAuthSessionServer() {
+
+    const headersList = headers()
+    const uri = headersList.get('x-pathname');
+
     try {
-        const runWithAmplifyServerContext = await getAmplifyServerContext();
+        const runWithAmplifyServerContext = await getAmplifyServerContext(uri!);
         const currentUser = await runWithAmplifyServerContext({
             nextServerContext: { cookies },
             operation: (contextSpec) => fetchAuthSession(contextSpec),
@@ -60,8 +64,12 @@ export async function AuthfetchAuthSessionServer() {
 
 
 export async function AuthfetchUserAttributesServer() {
+
+    const headersList = headers()
+    const uri = headersList.get('x-pathname');
+    
     try {
-        const runWithAmplifyServerContext = await getAmplifyServerContext();
+        const runWithAmplifyServerContext = await getAmplifyServerContext(uri!);
         const currentUser = await runWithAmplifyServerContext({
             nextServerContext: { cookies },
             operation: (contextSpec) => fetchUserAttributes(contextSpec),

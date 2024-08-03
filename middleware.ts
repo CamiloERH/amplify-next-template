@@ -12,7 +12,7 @@ export async function middleware(request: NextRequest) {
     headers: requestHeaders
   });
 
-  const runWithAmplifyServerContext = await getAmplifyServerContext();
+  const runWithAmplifyServerContext = await getAmplifyServerContext(request.nextUrl.hostname);
 
   const authenticated = await runWithAmplifyServerContext({
     nextServerContext: { request, response },

@@ -6,6 +6,7 @@ import "./app.css";
 import ConfigureAmplifyClientSide from "./components/ConfigureAmplifyClientSide";
 import { SessionProvider } from "./components/SessionProvider";
 import { getPoolId } from "./utils/getClientId";
+import { headers } from "next/headers";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -22,7 +23,11 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
 
-  const poolId = await getPoolId();
+
+  const headersList = headers()
+  const uri = headersList.get('x-pathname');
+
+  const poolId = await getPoolId(uri!);
 
   return (
     <html lang="en">
