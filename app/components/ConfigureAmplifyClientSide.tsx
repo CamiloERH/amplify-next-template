@@ -14,6 +14,8 @@ export default function AmplifyClientSide({ userPoolCLientId }: IAmplifyClientSi
 
     const uri = window.location.host;
 
+    console.log(uri);
+
     Amplify.configure({
       Auth: {
         Cognito: {
