@@ -27,6 +27,8 @@ export default async function RootLayout({
   const headersList = headers()
   const uri = headersList.get('x-pathname');
 
+  console.log("path layout", uri);
+
   const poolId = await getPoolId(uri!);
 
   console.log("poolId clientside", poolId)
