@@ -2,6 +2,7 @@
 
 import { Amplify } from 'aws-amplify';
 import { getPoolId } from '../utils/getClientId';
+import { useEffect } from 'react';
 
 interface IAmplifyClientSide {
   userPoolCLientId: string;
@@ -9,21 +10,25 @@ interface IAmplifyClientSide {
 
 export default function AmplifyClientSide({ userPoolCLientId }: IAmplifyClientSide) {
 
-  const poolId = getPoolId(window.location.host)
+  useEffect(() => {
 
-  Amplify.configure({
-    Auth: {
-      Cognito: {
-        userPoolClientId: poolId,
-        userPoolId: "us-east-2_EnrIBqkYL",
-        identityPoolId: "us-east-2:01b24d4f-bc96-4a86-8fe1-462cf4868eb0",
-        loginWith: {
-          username: true,
-          email: true
+    const uri = window.location.host;
+
+    Amplify.configure({
+      Auth: {
+        Cognito: {
+          userPoolClientId: getPoolId(uri),
+          userPoolId: "us-east-2_EnrIBqkYL",
+          identityPoolId: "us-east-2:01b24d4f-bc96-4a86-8fe1-462cf4868eb0",
+          loginWith: {
+            username: true,
+            email: true
+          },
         },
       },
-    },
-  }, { ssr: true });
+    }, { ssr: true });
+  }, []);
+
 
   return null;
 }
