@@ -8,9 +8,9 @@ import { getPoolId } from "./getClientId";
 
 export const getAmplifyServerContext = async () => {
 
-    const poolId = await getPoolId();
+    const cookieStore = cookies()
 
-    console.log(poolId);
+    const poolId = await getPoolId();
 
     const { runWithAmplifyServerContext } = createServerRunner({
         config: {
