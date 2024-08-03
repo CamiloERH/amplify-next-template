@@ -11,6 +11,8 @@ export const getAmplifyServerContext = async (uri: string) => {
     const cookieStore = cookies()
 
     const poolId = await getPoolId(uri);
+
+    console.log(poolId);
     
     const { runWithAmplifyServerContext } = createServerRunner({
         config: {

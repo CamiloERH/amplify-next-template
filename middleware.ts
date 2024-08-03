@@ -8,6 +8,9 @@ export async function middleware(request: NextRequest) {
   const requestHeaders = new Headers(request.headers)
   requestHeaders.set('x-pathname', request.nextUrl.hostname);
 
+
+  console.log(request.nextUrl.hostname);
+
   const response = NextResponse.next({
     headers: requestHeaders
   });
