@@ -1,24 +1,36 @@
-// utils/amplify-utils.ts
-import { cookies } from "next/headers";
+"use server";
 
+import { cookies } from "next/headers";
 import { createServerRunner } from "@aws-amplify/adapter-nextjs";
 import { generateServerClientUsingCookies } from "@aws-amplify/adapter-nextjs/api";
 import { fetchAuthSession, getCurrentUser, fetchUserAttributes } from "aws-amplify/auth/server";
+import { getPoolId } from "./getClientId";
 
-import { type Schema } from "@/amplify/data/resource";
-import outputs from "@/amplify_outputs.json";
+export const getAmplifyServerContext = async () => {
 
-export const { runWithAmplifyServerContext } = createServerRunner({
-    config: outputs,
-});
+    const poolId = await getPoolId();
 
-export const cookiesClient = generateServerClientUsingCookies<Schema>({
-    config: outputs,
-    cookies,
-});
+    const { runWithAmplifyServerContext } = createServerRunner({
+        config: {
+            Auth: {
+                Cognito: {
+                    userPoolClientId: poolId,
+                    userPoolId: "us-east-2_EnrIBqkYL",
+                    identityPoolId: "us-east-2:01b24d4f-bc96-4a86-8fe1-462cf4868eb0"
+                }
+            }
+        }
+    });
+
+    return runWithAmplifyServerContext;
+
+}
+
+
 
 export async function AuthGetCurrentUserServer() {
     try {
+        const runWithAmplifyServerContext = await getAmplifyServerContext();
         const currentUser = await runWithAmplifyServerContext({
             nextServerContext: { cookies },
             operation: (contextSpec) => getCurrentUser(contextSpec),
@@ -31,6 +43,7 @@ export async function AuthGetCurrentUserServer() {
 
 export async function AuthfetchAuthSessionServer() {
     try {
+        const runWithAmplifyServerContext = await getAmplifyServerContext();
         const currentUser = await runWithAmplifyServerContext({
             nextServerContext: { cookies },
             operation: (contextSpec) => fetchAuthSession(contextSpec),
@@ -44,6 +57,7 @@ export async function AuthfetchAuthSessionServer() {
 
 export async function AuthfetchUserAttributesServer() {
     try {
+        const runWithAmplifyServerContext = await getAmplifyServerContext();
         const currentUser = await runWithAmplifyServerContext({
             nextServerContext: { cookies },
             operation: (contextSpec) => fetchUserAttributes(contextSpec),
@@ -53,3 +67,4 @@ export async function AuthfetchUserAttributesServer() {
         console.error(error);
     }
 }
+

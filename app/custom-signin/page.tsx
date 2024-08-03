@@ -3,7 +3,6 @@
 import type { FormEvent } from "react"
 import { Amplify } from "aws-amplify"
 import { signIn } from "aws-amplify/auth"
-import outputs from "../../amplify_outputs.json"
 
 
 interface SignInFormElements extends HTMLFormControlsCollection {
