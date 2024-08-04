@@ -1,24 +1,18 @@
-"use server";
-
 import { cookies, headers } from "next/headers";
 import { createServerRunner } from "@aws-amplify/adapter-nextjs";
 import { generateServerClientUsingCookies } from "@aws-amplify/adapter-nextjs/api";
 import { fetchAuthSession, getCurrentUser, fetchUserAttributes } from "aws-amplify/auth/server";
 import { getUserClientPoolId } from "./getClientId";
 
-export const getAmplifyServerContext = async (uri: string) => {
+export const getAmplifyServerContext = (uri: string) => {
 
-    const cookieStore = cookies()
+    const userPoolClientId = getUserClientPoolId(uri);
 
-    const poolId = await getUserClientPoolId(uri);
-
-    console.log(poolId);
-    
     const { runWithAmplifyServerContext } = createServerRunner({
         config: {
             Auth: {
                 Cognito: {
-                    userPoolClientId: poolId,
+                    userPoolClientId: userPoolClientId,
                     userPoolId: "us-east-2_EnrIBqkYL",
                     identityPoolId: "us-east-2:01b24d4f-bc96-4a86-8fe1-462cf4868eb0"
                 }
@@ -36,7 +30,7 @@ export async function AuthGetCurrentUserServer() {
     const uri = headersList.get('x-pathname');
 
     try {
-        const runWithAmplifyServerContext = await getAmplifyServerContext(uri!);
+        const runWithAmplifyServerContext = getAmplifyServerContext(uri!);
         const currentUser = await runWithAmplifyServerContext({
             nextServerContext: { cookies },
             operation: (contextSpec) => getCurrentUser(contextSpec),
@@ -53,7 +47,7 @@ export async function AuthfetchAuthSessionServer() {
     const uri = headersList.get('x-pathname');
 
     try {
-        const runWithAmplifyServerContext = await getAmplifyServerContext(uri!);
+        const runWithAmplifyServerContext = getAmplifyServerContext(uri!);
         const currentUser = await runWithAmplifyServerContext({
             nextServerContext: { cookies },
             operation: (contextSpec) => fetchAuthSession(contextSpec),
@@ -69,9 +63,9 @@ export async function AuthfetchUserAttributesServer() {
 
     const headersList = headers()
     const uri = headersList.get('x-pathname');
-    
+
     try {
-        const runWithAmplifyServerContext = await getAmplifyServerContext(uri!);
+        const runWithAmplifyServerContext = getAmplifyServerContext(uri!);
         const currentUser = await runWithAmplifyServerContext({
             nextServerContext: { cookies },
             operation: (contextSpec) => fetchUserAttributes(contextSpec),

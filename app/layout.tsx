@@ -29,7 +29,7 @@ export default async function RootLayout({
 
   console.log("path layout", host);
 
-  const userPoolClientId = await getUserClientPoolId(host!);
+  const userPoolClientId = getUserClientPoolId(host!);
 
   console.log("poolId clientside", userPoolClientId)
 
@@ -37,7 +37,10 @@ export default async function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <SessionProvider>
-          {userPoolClientId}
+          <div className="flex flex-col m-4 bg-red-500">
+            {userPoolClientId}
+          </div>
+
           <ConfigureAmplifyClientSide
             userPoolCLientId={userPoolClientId}
           />
