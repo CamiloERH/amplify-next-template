@@ -16,6 +16,7 @@ export default async function SecurePage() {
 
   console.log(session?.tokens?.accessToken.toString());
 
+
   const cookieStore = cookies();
   const userId = cookieStore.get("userId")?.value;
 
@@ -23,6 +24,7 @@ export default async function SecurePage() {
     <div className="flex gap-4 w-xl flex-col">
       <p className="max-w-md">{session?.tokens?.accessToken.toString()}</p>
       <p className="text-red-500">{uri}</p>
+      <p className="text-black">{JSON.stringify(session?.tokens?.accessToken.payload)}</p>
     </div>
   );
 }

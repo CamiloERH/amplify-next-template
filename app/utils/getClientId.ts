@@ -1,6 +1,4 @@
-"use server"
-
-export const getPoolId = (uri: string) => {
+export const getUserClientPoolId = (uri: string): string => {
     switch (uri) {
         case "new-domain-test.vercel.app":
             return "25f5223fhkvjprn629msot83v9"

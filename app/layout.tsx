@@ -5,7 +5,7 @@ import { Inter } from "next/font/google";
 import "./app.css";
 import ConfigureAmplifyClientSide from "./components/ConfigureAmplifyClientSide";
 import { SessionProvider } from "./components/SessionProvider";
-import { getPoolId } from "./utils/getClientId";
+import { getUserClientPoolId } from "./utils/getClientId";
 import { headers } from "next/headers";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -25,20 +25,21 @@ export default async function RootLayout({
 
 
   const headersList = headers()
-  const uri = headersList.get('x-pathname');
+  const host = headersList.get('x-pathname');
 
-  console.log("path layout", uri);
+  console.log("path layout", host);
 
-  const poolId = await getPoolId(uri!);
+  const userPoolClientId = await getUserClientPoolId(host!);
 
-  console.log("poolId clientside", poolId)
+  console.log("poolId clientside", userPoolClientId)
 
   return (
     <html lang="en">
       <body className={inter.className}>
         <SessionProvider>
+          {userPoolClientId}
           <ConfigureAmplifyClientSide
-            userPoolCLientId={poolId}
+            userPoolCLientId={userPoolClientId}
           />
           {children}
         </SessionProvider>

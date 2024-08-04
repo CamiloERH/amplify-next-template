@@ -4,13 +4,13 @@ import { cookies, headers } from "next/headers";
 import { createServerRunner } from "@aws-amplify/adapter-nextjs";
 import { generateServerClientUsingCookies } from "@aws-amplify/adapter-nextjs/api";
 import { fetchAuthSession, getCurrentUser, fetchUserAttributes } from "aws-amplify/auth/server";
-import { getPoolId } from "./getClientId";
+import { getUserClientPoolId } from "./getClientId";
 
 export const getAmplifyServerContext = async (uri: string) => {
 
     const cookieStore = cookies()
 
-    const poolId = await getPoolId(uri);
+    const poolId = await getUserClientPoolId(uri);
 
     console.log(poolId);
     

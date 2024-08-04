@@ -1,7 +1,7 @@
 'use client';
 
 import { Amplify } from 'aws-amplify';
-import { getPoolId } from '../utils/getClientId';
+import { getUserClientPoolId } from '../utils/getClientId';
 import { useEffect } from 'react';
 
 interface IAmplifyClientSide {
